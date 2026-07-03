@@ -1,23 +1,21 @@
 export default function SectionTitle({
-  subtitle,
   title,
+  subtitle,
   description,
 }) {
   return (
-    <div className="mx-auto mb-16 max-w-3xl text-center">
+    <div className="mb-14 text-center">
 
-      {subtitle && (
-        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-blue-600">
-          {subtitle}
-        </p>
-      )}
+      <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600">
+        {subtitle}
+      </p>
 
-      <h2 className="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl">
+      <h2 className="mt-4 text-4xl font-black text-slate-900 sm:text-5xl">
         {title}
       </h2>
 
       {description && (
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+        <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
           {description}
         </p>
       )}
