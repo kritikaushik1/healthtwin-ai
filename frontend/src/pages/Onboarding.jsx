@@ -1,7 +1,9 @@
 export default function Onboarding() {
   return (
-    <div className="flex min-h-screen items-center justify-center text-5xl font-bold">
-      AI Onboarding
+    <div className="min-h-screen flex items-center justify-center">
+      <h1 className="text-4xl font-bold">
+        Onboarding 🚧
+      </h1>
     </div>
   );
 }

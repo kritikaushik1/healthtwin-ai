@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Menu, X, HeartPulse } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const navItems = [
     "Features",
@@ -13,35 +16,36 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-5">
+    <nav className="fixed top-0 left-0 z-50 w-full border-b border-gray-100 bg-white/70 backdrop-blur-xl">
+
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
 
         {/* Logo */}
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => navigate("/")}
+          className="flex cursor-pointer items-center gap-3"
         >
-          <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center shadow-lg">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 shadow-lg">
             <HeartPulse className="text-white" size={22} />
           </div>
 
-          <div>
-            <h1 className="font-bold text-xl text-gray-900">
-              HealthTwin AI
-            </h1>
-          </div>
+          <h1 className="text-xl font-bold text-gray-900">
+            HealthTwin AI
+          </h1>
+
         </motion.div>
 
         {/* Desktop Menu */}
 
-        <ul className="hidden lg:flex gap-10 text-gray-600 font-medium">
+        <ul className="hidden gap-10 font-medium text-gray-600 lg:flex">
 
           {navItems.map((item) => (
             <motion.li
               key={item}
               whileHover={{ y: -2 }}
-              className="cursor-pointer hover:text-blue-600 transition"
+              className="cursor-pointer transition hover:text-blue-600"
             >
               {item}
             </motion.li>
@@ -51,16 +55,20 @@ export default function Navbar() {
 
         {/* Buttons */}
 
-        <div className="hidden lg:flex items-center gap-5">
+        <div className="hidden items-center gap-5 lg:flex">
 
-          <button className="font-medium text-gray-700 hover:text-blue-600 transition">
+          <button
+            onClick={() => navigate("/login")}
+            className="font-medium text-gray-700 transition hover:text-blue-600"
+          >
             Sign In
           </button>
 
           <motion.button
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: .95 }}
-            className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-full font-semibold shadow-lg"
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/signup")}
+            className="rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition hover:bg-blue-700"
           >
             Get Started Free
           </motion.button>
@@ -83,12 +91,9 @@ export default function Navbar() {
       {menuOpen && (
 
         <motion.div
-
           initial={{ opacity: 0, y: -20 }}
-
           animate={{ opacity: 1, y: 0 }}
-
-          className="lg:hidden bg-white px-8 pb-8"
+          className="bg-white px-8 pb-8 lg:hidden"
         >
 
           <ul className="space-y-5">
@@ -99,10 +104,11 @@ export default function Navbar() {
 
           </ul>
 
-          <button className="mt-6 w-full bg-blue-600 text-white py-3 rounded-full">
-
+          <button
+            onClick={() => navigate("/signup")}
+            className="mt-6 w-full rounded-full bg-blue-600 py-3 text-white"
+          >
             Get Started Free
-
           </button>
 
         </motion.div>
