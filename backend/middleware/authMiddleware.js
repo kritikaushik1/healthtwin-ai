@@ -22,10 +22,10 @@ export const protect = async (req, res, next) => {
 
     // Verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    console.log("Decoded:", decoded);
     // Find User
     req.user = await User.findById(decoded.id).select("-password");
-
+    console.log("User:", req.user);
     if (!req.user) {
       return res.status(401).json({
         success: false,

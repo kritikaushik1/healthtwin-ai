@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,61 +20,120 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      minlength: 6,
     },
 
-    isVerified: {
+    profileCompleted: {
       type: Boolean,
       default: false,
     },
 
-    profileImage: {
+    // ==========================
+    // Personal Information
+    // ==========================
+
+    dateOfBirth: {
+      type: Date,
+    },
+
+    gender: {
       type: String,
-      default: "",
+      enum: ["Male", "Female", "Other"],
     },
 
-    role: {
+    phone: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
     },
 
-    personal: {
-      age: Number,
-      gender: String,
-      dob: Date,
-      height: Number,
-      weight: Number,
-      bloodGroup: String,
+    height: {
+      type: Number,
     },
 
-    medical: {
-      allergies: [String],
-      diseases: [String],
-      medications: [String],
-      surgeries: [String],
+    weight: {
+      type: Number,
     },
 
-    lifestyle: {
-      smoking: Boolean,
-      alcohol: Boolean,
-      activityLevel: String,
-      sleepHours: Number,
-      dietType: String,
+    bloodGroup: {
+      type: String,
     },
 
-    reports: [
+    // ==========================
+    // Medical
+    // ==========================
+
+    allergies: [
       {
-        reportName: String,
-        reportUrl: String,
-        uploadedAt: Date,
+        type: String,
       },
     ],
 
-    reminders: [
+    medicalConditions: [
       {
-        title: String,
-        time: Date,
-        completed: Boolean,
+        type: String,
+      },
+    ],
+
+    medications: [
+      {
+        type: String,
+      },
+    ],
+
+    surgeries: [
+      {
+        type: String,
+      },
+    ],
+
+    // ==========================
+    // Lifestyle
+    // ==========================
+
+    dietType: {
+      type: String,
+      enum: [
+        "Vegetarian",
+        "Eggetarian",
+        "Non-Vegetarian",
+        "Vegan",
+      ],
+    },
+
+    exerciseFrequency: {
+      type: String,
+      enum: [
+        "Daily",
+        "Weekly",
+        "Rarely",
+        "Never",
+      ],
+    },
+
+    sleepHours: {
+      type: Number,
+    },
+
+    waterIntake: {
+      type: Number,
+    },
+
+    smoking: {
+      type: Boolean,
+      default: false,
+    },
+
+    alcohol: {
+      type: Boolean,
+      default: false,
+    },
+
+    // ==========================
+    // Goals
+    // ==========================
+
+    healthGoals: [
+      {
+        type: String,
       },
     ],
   },
@@ -82,4 +142,33 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("User", userSchema);
+userSchema.pre("save", async function (next) {
+
+  if (!this.isModified("password"))
+    return next();
+
+  const salt = await bcrypt.genSalt(10);
+
+  this.password = await bcrypt.hash(
+    this.password,
+    salt
+  );
+
+  next();
+
+});
+
+userSchema.methods.comparePassword =
+async function (password) {
+
+  return bcrypt.compare(
+    password,
+    this.password
+  );
+
+};
+
+export default mongoose.model(
+  "User",
+  userSchema
+);
