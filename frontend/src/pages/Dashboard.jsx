@@ -3,12 +3,19 @@ import { getCurrentUser } from "../services/authService";
 import useAuthStore from "../store/authStore";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import AppLayout from "../components/layout/AppLayout";
+import WelcomeCard from "../components/dashboard/WelcomeCard";
+import HealthScoreCard from "../components/dashboard/HealthScoreCard";
+import RecentReportsCard from "../components/dashboard/RecentReportsCard";
+import AIRecommendationCard from "../components/dashboard/AIRecommendationCard";
+import MedicineReminderCard from "../components/dashboard/MedicineReminderCard";
+import HealthTrendChart from "../components/dashboard/HealthTrendChart";
+import QuickActions from "../components/dashboard/QuickActions";
+import { dashboardData } from "../data/mockUiData";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { token, logout } = useAuthStore();
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -24,37 +31,53 @@ export default function Dashboard() {
 
     if (token) {
       fetchUser();
+    } else {
+      setUser({ fullName: dashboardData.user.name, email: dashboardData.user.email });
     }
   }, [token, logout]);
 
-  if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  const displayName = user?.fullName || dashboardData.user.name;
+  const displayEmail = user?.email || dashboardData.user.email;
 
   return (
-    <div className="min-h-screen bg-slate-100 p-10">
+    <AppLayout title={`Welcome, ${displayName}`} subtitle={displayEmail}>
+      <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+        <WelcomeCard
+          name={displayName}
+          headline={dashboardData.welcome.headline}
+          subtext={dashboardData.welcome.subtext}
+          score={dashboardData.welcome.score}
+        />
+        <HealthScoreCard
+          score={dashboardData.healthScore.score}
+          trend={dashboardData.healthScore.trend}
+          focus={dashboardData.healthScore.focus}
+        />
+      </div>
 
-      <h1 className="text-4xl font-bold">
-        Welcome, {user.fullName} 👋
-      </h1>
+      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <HealthTrendChart data={dashboardData.trendData} />
+        <RecentReportsCard reports={dashboardData.reports} />
+      </div>
 
-      <p className="mt-4 text-lg text-slate-600">
-        {user.email}
-      </p>
+      <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <AIRecommendationCard recommendations={dashboardData.recommendations} />
+        <MedicineReminderCard reminders={dashboardData.medicineReminders} />
+      </div>
 
-     <button
-onClick={()=>{
-logout();
-navigate("/login");
-}}
->
-Logout
-</button>
+      <QuickActions actions={dashboardData.quickActions} />
 
-    </div>
+      <div className="flex justify-end">
+        <button
+          onClick={() => {
+            logout();
+            navigate("/login");
+          }}
+          className="rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50"
+        >
+          Logout
+        </button>
+      </div>
+    </AppLayout>
   );
 }

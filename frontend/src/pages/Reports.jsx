@@ -1,45 +1,23 @@
 import { useState } from "react";
+import AppLayout from "../components/layout/AppLayout";
+import UploadReportCard from "../components/reports/UploadReportCard";
+import ReportHistoryTable from "../components/reports/ReportHistoryTable";
+import ReportDetailsModal from "../components/reports/ReportDetailsModal";
+import AISummaryCard from "../components/reports/AISummaryCard";
+import { reportsData } from "../data/mockUiData";
 
-import Step1Personal from "../components/onboarding/Step1Personal";
-import Step2Medical from "../components/onboarding/Step2Medical";
-import Step3Lifestyle from "../components/onboarding/Step3Lifestyle";
-import Step4Goals from "../components/onboarding/Step4Goals";
-import ProgressBar from "../components/onboarding/ProgressBar";
-
-export default function Onboarding() {
-  const [step, setStep] = useState(1);
+export default function Reports() {
+  const [selectedReport, setSelectedReport] = useState(null);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <AppLayout title="Reports" subtitle="Upload and review your latest medical documents in a secure workspace.">
+      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+        <UploadReportCard title={reportsData.uploadCard.title} description={reportsData.uploadCard.description} />
+        <AISummaryCard summary={reportsData.summary} />
+      </div>
 
-      <ProgressBar step={step} totalSteps={4} />
-
-      {step === 1 && (
-        <Step1Personal
-          next={() => setStep(2)}
-        />
-      )}
-
-      {step === 2 && (
-        <Step2Medical
-          next={() => setStep(3)}
-          back={() => setStep(1)}
-        />
-      )}
-
-      {step === 3 && (
-        <Step3Lifestyle
-          next={() => setStep(4)}
-          back={() => setStep(2)}
-        />
-      )}
-
-      {step === 4 && (
-        <Step4Goals
-          back={() => setStep(3)}
-        />
-      )}
-
-    </div>
+      <ReportHistoryTable reports={reportsData.history} onSelect={setSelectedReport} />
+      <ReportDetailsModal report={selectedReport} onClose={() => setSelectedReport(null)} />
+    </AppLayout>
   );
 }

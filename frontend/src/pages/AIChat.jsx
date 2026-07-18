@@ -1,7 +1,15 @@
+import AppLayout from "../components/layout/AppLayout";
+import ChatLayout from "../components/chat/ChatLayout";
+import { chatData } from "../data/mockUiData";
+
 export default function AIChat() {
   return (
-    <div className="flex min-h-screen items-center justify-center text-5xl font-bold">
-      AI Chat
-    </div>
+    <AppLayout title="AI Chat" subtitle="Get guidance from your personalized wellness assistant.">
+      <ChatLayout
+        initialMessages={chatData.initialMessages}
+        suggestedQuestions={chatData.suggestedQuestions}
+        typingLabel={chatData.typingLabel}
+      />
+    </AppLayout>
   );
 }
